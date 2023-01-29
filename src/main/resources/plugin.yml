@@ -1,0 +1,52 @@
+name: TamagoRPG
+version: '${project.version}'
+main: com.github.tsuoihito.tamagorpg.TamagoRPG
+api-version: 1.19
+authors: [ tsuoihito ]
+description: Plugin for TamagoRPG
+depend: [ Multiverse-Core, PlaceholderAPI ]
+commands:
+  rpg:
+    permission: tamagorpg.command.rpg
+    usage: |
+      /<command> movetodungeon DUNGEON - コマンド実行者のダンジョンへの移動を試みる
+      /<command> dungeoncompleted DUNGEON DELAY - ダンジョンをクリア状態にし、指定時間後にダンジョン内のプレイヤーをオーバーワールドへテレポートさせ、ダンジョンのリセットを行う
+      /<command> dungeonover DUNGEON DELAY - ダンジョンをゲームオーバー状態にし、指定時間後にダンジョン内のプレイヤーをオーバーワールドへテレポートさせ、ダンジョンのリセットを行う
+      /<command> createprofile - コマンド実行者のプロフィールを作成する
+  rpg-manage:
+    permission: tamagorpg.command.rpg-manage
+    aliases: [ rpgm ]
+    usage: | 
+      /<command> dungeon create DUNGEON - ダンジョンを作成する
+      /<command> dungeon delete DUNGEON - ダンジョンを削除する
+      /<command> dungeon list - ダンジョンの一覧を表示する
+      /<command> dungeon info DUNGEON - ダンジョンの情報を表示する
+      /<command> dungeon setdisplayname DUNGEON DISPLAY_NAME - ダンジョンの表示名を設定する
+      /<command> dungeon addrequired DUNGEON REQUIRED_DUNGEON - ダンジョンの必須ダンジョンを追加する
+      /<command> dungeon removerequired DUNGEON REQUIRED_DUNGEON - ダンジョンの必須ダンジョンを削除する
+      /<command> dungeon setmax DUNGEON MAX - ダンジョンの最大人数を設定する
+      /<command> dungeon setlevel DUNGEON LEVEL - ダンジョンの必須レベルを設定する
+      /<command> dungeon lock DUNGEON - ダンジョンをロックする
+      /<command> dungeon unlock DUNGEON - ダンジョンのロックを解除する 
+      /<command> player setrole PLAYER ROLE - プレイヤーの役職を設定する
+      /<command> player adddungeon PLAYER DUNGEON - プレイヤーがクリアしたダンジョンを追加する
+      /<command> player removedungeon PLAYER DUNGEON - プレイヤーがクリアしたダンジョンを削除する
+      /<command> player setlevel PLAYER LEVEL - プレイヤーのレベルを設定する
+      /<command> player info PLAYER - プレイヤーの情報を表示する
+  custom-give:
+    permission: tamagorpg.command.custom-give
+    usage: |
+      /<command> PLAYER CUSTOM_ITEM [AMOUNT] - カスタムアイテムをプレイヤーに付与する
+  custom-json:
+    permission: tamagorpg.command.custom-json
+    usage: |
+      /<command> CUSTOM_ITEM - カスタムアイテムのJSONデータを表示する
+permissions:
+  tamagorpg.command.rpg:
+    default: true
+  tamagorpg.command.rpg-manage:
+    default: op
+  tamagorpg.command.custom-give:
+    default: op
+  tamagorpg.command.custom-json:
+    default: op
