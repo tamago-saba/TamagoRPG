@@ -1,5 +1,6 @@
 package com.github.tsuoihito.tamagorpg;
 
+import org.bukkit.entity.Player;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -32,6 +33,8 @@ public class TamagoRPGCommand implements TabExecutor {
                     return onSaveWorldCommand(sender, args);
                 case "reset-world":
                     return onResetWorldCommand(sender, args);
+                case "check":
+                    return onCheckCommand(sender, args);
             }
         }
         return false;
@@ -92,6 +95,31 @@ public class TamagoRPGCommand implements TabExecutor {
         return false;
     }
 
+    public boolean onCheckCommand(CommandSender sender, String[] args) {
+        if (args.length == 2 && sender instanceof Player) {
+            int distance = Integer.parseInt(args[1]);
+            Player player = (Player) sender;
+
+            player.sendMessage("Checking scores...");
+            plugin.getServer().getScheduler().runTask(plugin, () ->
+                ScoreChecker.getCommandBlockScoreResults(
+                    player.getLocation(), distance
+                ).forEach(r ->
+                    player.sendMessage(
+                        "Found score '%s' at CommandBlock %w (%x, %y, %z)"
+                            .replace("%s", r.getName())
+                            .replace("%w", r.getWorld())
+                            .replace("%x", Integer.toString(r.getX()))
+                            .replace("%y", Integer.toString(r.getY()))
+                            .replace("%z", Integer.toString(r.getZ()))
+                    )
+                )
+            );
+            return true;
+        }
+        return false;
+    }
+
     @Nullable
     @Override
     public List<String> onTabComplete(
@@ -103,7 +131,7 @@ public class TamagoRPGCommand implements TabExecutor {
         switch (args.length) {
             case 1:
                 return getCandidate(
-                    Arrays.asList("save-world", "reset-world"),
+                    Arrays.asList("save-world", "reset-world", "check"),
                     args[0]
                 );
             case 2:

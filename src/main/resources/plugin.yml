@@ -9,6 +9,11 @@ commands:
     usage: |
       /<command> save-world WORLD - Save the data for world WORLD.
       /<command> reset-world WORLD [DELAY] - Reset the data for WORLD after DELAY ticks.
+      /<command> check - Run tag/score checking
+      /<command> add-tag NAME INFO - Add a tag to database
+      /<command> remove-tag NAME - Remove a tag from database
+      /<command> add-score NAME INFO - Add a tag to database
+      /<command> remove-score NAME - Remove a tag from database
 permissions:
   tamagorpg.command:
     default: op
