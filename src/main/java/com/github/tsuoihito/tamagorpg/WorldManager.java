@@ -58,6 +58,10 @@ public class WorldManager {
         }
     }
 
+    public static boolean restoreWorld(TamagoRPG plugin, String world) {
+        return restoreWorld(plugin, plugin.getMVWorldManager(), world);
+    }
+
     public static boolean restoreWorld(
         JavaPlugin plugin,
         MVWorldManager mvWorldManager,

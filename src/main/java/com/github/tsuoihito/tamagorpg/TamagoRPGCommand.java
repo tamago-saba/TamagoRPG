@@ -1,5 +1,6 @@
 package com.github.tsuoihito.tamagorpg;
 
+import com.github.tsuoihito.tamagorpg.model.CommandBlockScoreResult;
 import org.bukkit.entity.Player;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -44,16 +45,14 @@ public class TamagoRPGCommand implements TabExecutor {
         if (args.length == 2) {
             String world = args[1];
 
-            sender.sendMessage(
-                "Saving data for world '%s'".replace("%s", world)
-            );
+            sender.sendMessage(RPGMessage.getSavingWorldDataMessage(world));
 
             plugin.getServer().getScheduler().runTask(plugin, () -> {
                 boolean success = WorldManager.saveWorld(plugin, world);
                 if (success) {
-                    sender.sendMessage("Completed saving");
+                    sender.sendMessage(RPGMessage.getCompletedSavingMessage());
                 } else {
-                    sender.sendMessage("Failed to save");
+                    sender.sendMessage(RPGMessage.getFailedToSaveMessage());
                 }
             });
 
@@ -66,21 +65,16 @@ public class TamagoRPGCommand implements TabExecutor {
         if (args.length == 2 || args.length == 3) {
             String world = args[1];
             Runnable resetWorld = () -> {
-                boolean success = WorldManager.restoreWorld(
-                    plugin,
-                    plugin.getMVWorldManager(),
-                    world
-                );
-                if (success) {
-                    sender.sendMessage("Completed restoring");
+                if (WorldManager.restoreWorld(plugin, world)) {
+                    sender.sendMessage(
+                        RPGMessage.getCompletedRestoringMessage()
+                    );
                 } else {
-                    sender.sendMessage("Failed to restore");
+                    sender.sendMessage(RPGMessage.getFailedToRestoreMessage());
                 }
             };
 
-            sender.sendMessage(
-                "Restoring data for world '%s'".replace("%s", world)
-            );
+            sender.sendMessage(RPGMessage.getRestoringWorldDataMessage(world));
 
             if (args.length == 2) {
                 plugin.getServer().getScheduler().runTask(plugin, resetWorld);
@@ -100,21 +94,21 @@ public class TamagoRPGCommand implements TabExecutor {
             int distance = Integer.parseInt(args[1]);
             Player player = (Player) sender;
 
-            player.sendMessage("Checking scores...");
-            plugin.getServer().getScheduler().runTask(plugin, () ->
-                ScoreChecker.getCommandBlockScoreResults(
-                    player.getLocation(), distance
-                ).forEach(r ->
-                    player.sendMessage(
-                        "Found score '%s' at CommandBlock %w (%x, %y, %z)"
-                            .replace("%s", r.getName())
-                            .replace("%w", r.getWorld())
-                            .replace("%x", Integer.toString(r.getX()))
-                            .replace("%y", Integer.toString(r.getY()))
-                            .replace("%z", Integer.toString(r.getZ()))
-                    )
-                )
-            );
+            player.sendMessage(RPGMessage.getCheckingScoresMessage());
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                List<CommandBlockScoreResult> results =
+                    ScoreChecker.getCommandBlockScoreResults(
+                        player.getLocation(), distance
+                    );
+                if (results.size() > 0) {
+                    results.forEach(r ->
+                        player.spigot()
+                            .sendMessage(RPGMessage.getFoundScoreMessage(r))
+                    );
+                } else {
+                    player.sendMessage(RPGMessage.getFoundNoScoreMessage());
+                }
+            });
             return true;
         }
         return false;
@@ -128,26 +122,32 @@ public class TamagoRPGCommand implements TabExecutor {
         @NotNull String label,
         @NotNull String[] args
     ) {
-        switch (args.length) {
-            case 1:
-                return getCandidate(
-                    Arrays.asList("save-world", "reset-world", "check"),
-                    args[0]
-                );
-            case 2:
-                switch (args[0]) {
-                    case "save-world":
-                    case "reset-world":
-                        return getCandidate(
-                            plugin.getServer().getWorlds()
-                                .stream()
-                                .map(WorldInfo::getName)
-                                .collect(Collectors.toList()),
-                            args[1]
-                        );
-                }
+        if (args.length == 1) {
+            return getCandidate(
+                Arrays.asList("save-world", "reset-world", "check"),
+                args[0]
+            );
+        } else if (args.length > 1) {
+            switch (args[0]) {
+                case "save-world":
+                case "reset-world":
+                    switch (args.length) {
+                        case 2:
+                            return getWorldNameCandidate(args[1]);
+                    }
+            }
         }
         return new ArrayList<>();
+    }
+
+    private List<String> getWorldNameCandidate(String typing) {
+        return getCandidate(
+            plugin.getServer().getWorlds()
+                .stream()
+                .map(WorldInfo::getName)
+                .collect(Collectors.toList()),
+            typing
+        );
     }
 
     private List<String> getCandidate(List<String> list, String typing) {
