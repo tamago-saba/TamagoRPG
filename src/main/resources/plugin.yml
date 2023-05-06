@@ -1,19 +1,19 @@
 name: TamagoRPG
 version: '${project.version}'
-main: com.github.tsuoihito.tamagorpg.TamagoRPG
+main: net.nutchi.tamagorpg.TamagoRPG
 api-version: 1.19
+authors: [ Nutchi ]
 depend: [ Multiverse-Core ]
 commands:
   rpg:
-    permission: tamagorpg.command
+    permission: tamagorpg.command.rpg
     usage: |
-      /<command> save-world WORLD - Save the data for world WORLD.
-      /<command> reset-world WORLD [DELAY] - Reset the data for WORLD after DELAY ticks.
-      /<command> check - Run tag/score checking
-      /<command> add-tag NAME INFO - Add a tag to database
-      /<command> remove-tag NAME - Remove a tag from database
-      /<command> add-score NAME INFO - Add a tag to database
-      /<command> remove-score NAME - Remove a tag from database
+      /<command> save-world NAME
+      /<command> reset-world NAME [DELAY]
+      /<command> list-tags
+      /<command> list-scores
+      /<command> search-tag NAME
+      /<command> search-score NAME
 permissions:
-  tamagorpg.command:
+  tamagorpg.command.rpg:
     default: op
