@@ -1,12 +1,13 @@
 package net.nutchi.tamagorpg.util;
 
-import java.io.File;
-import java.io.IOException;
+import com.onarandombox.MultiverseCore.api.MVWorldManager;
+import net.nutchi.tamagorpg.TamagoRPG;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
-import com.onarandombox.MultiverseCore.api.MVWorldManager;
-import net.nutchi.tamagorpg.TamagoRPG;
+
+import java.io.File;
+import java.io.IOException;
 
 public class WorldManager {
     public static boolean saveWorld(JavaPlugin plugin, String world) {
@@ -39,7 +40,7 @@ public class WorldManager {
     }
 
     public static boolean restoreWorld(JavaPlugin plugin, MVWorldManager mvWorldManager,
-            String world) {
+                                       String world) {
         try {
             File loadedWorld = getLoadedWorld(plugin.getServer().getWorldContainer(), world);
             File savedWorld = getSavedWorld(plugin.getDataFolder(), world);

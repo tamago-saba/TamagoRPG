@@ -10,10 +10,11 @@ commands:
     usage: |
       /<command> save-world NAME
       /<command> reset-world NAME [DELAY]
-      /<command> list-tags
-      /<command> list-scores
-      /<command> search-tag NAME
-      /<command> search-score NAME
+  shared-location:
+    permission: tamagorpg.commands.shared-location
+    aliases: [ sl ]
 permissions:
   tamagorpg.command.rpg:
+    default: op
+  tamagorpg.command.shared-location:
     default: op
